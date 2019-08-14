@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="flatfile" format="flatfile">
+      <types:shape format="flatfile" element="data" location="schemas/myFlatFile-4.ffd"/>
+    </types:type>
+    <types:type name="flat-json" format="json">
+      <types:shape format="weave" example="examples/flat-example.json"><![CDATA[%dw 2.0
+
+type flat_json = {|
+  bolNum: String, 
+  divisionCode: String, 
+  BUCode: String, 
+  partNum: String, 
+  CustName: String
+|} {"example": "{\"bolNum\":\"9876543210\",\"divisionCode\":\"6chars\",\"BUCode\":\"bucode\",\"partNum\":\"partss\",\"CustName\":\"brandon coch\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="flat-ffs" format="flatfile">
+      <types:shape format="flatfile" element="partsFileFormat" location="schemas/myFlatFile.ffs"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1d7f7fc3-edfa-4e95-a79f-2c7db203b2f8">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="flat-ffs"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#bec084b5-5633-427d-9c97-a3e47e47fe4d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="flatfile"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="flat-json"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

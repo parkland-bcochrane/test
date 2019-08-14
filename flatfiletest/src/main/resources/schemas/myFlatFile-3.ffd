@@ -1,0 +1,14 @@
+form: FLATFILE
+structures:
+- id: 'partsFileFormat'
+  name: partsFileFormat
+  data:
+  - groupId: 'Data'
+    items:
+    - { idRef: 'Data'}
+segments:
+- id: 'Data'
+  name: data
+  values:
+  - { id: 'bolNum', type: String, length: 10 }
+  - { id: 'divisionCode', type: String, length: 6 }

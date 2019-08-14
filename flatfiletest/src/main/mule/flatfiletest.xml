@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="73fefcf3-0838-4d76-9972-d9f1f98eca96" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="491e7364-5604-4d1f-a708-46da8186b9c2" >
+		<file:connection workingDir="C:\Users\bcochrane\Desktop" />
+	</file:config>
+	<flow name="flatfiletestFlow" doc:id="5373b297-9785-446d-8195-f702889e924d" >
+		<http:listener doc:name="/flat" doc:id="d40ce91e-d4b1-477b-b042-1a0755db36a4" config-ref="HTTP_Listener_config" path="/flat"/>
+		<file:read doc:id="1d7f7fc3-edfa-4e95-a79f-2c7db203b2f8" config-ref="File_Config" path="flatfiletest.txt" outputMimeType='application/flatfile; schemapath="C:\\Users\\bcochrane\\Desktop\\myFlatFile.ffd"'/>
+		<logger level="INFO" doc:name="Logger" doc:id="a2a76a36-e2e7-4208-a37b-0a379069129f" message='#[payload]'/>
+		<ee:transform doc:name="Transform Message" doc:id="bec084b5-5633-427d-9c97-a3e47e47fe4d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	bolNum: payload.bolNum default "",
+	divisionCode: payload.divisionCode default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		
+	</flow>
+</mule>
